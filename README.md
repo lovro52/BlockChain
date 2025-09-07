@@ -57,7 +57,7 @@ Aplikacija omogućuje korisnicima da se klade na natjecatelje unutar sportskih t
 
 ---
 
-## 🛠️ Tehnologije
+## Tehnologije
 
 - Solidity
 - Vue 3
