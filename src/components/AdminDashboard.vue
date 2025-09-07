@@ -66,7 +66,6 @@ const createTournament = async () => {
       return;
     }
 
-    // Spoji naziv i natjecatelje u jedan string
     const fullName = `${newName.value} | ${competitors.join(", ")}`;
     const tx = await contract.createTournament(fullName, competitors);
     status.value = "Stvaranje turnira...";

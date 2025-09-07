@@ -17,7 +17,7 @@
 
 <script setup>
 import { RouterLink } from "vue-router";
-import { isAdmin } from "../App.vue"; // 👈 uvozi admin status
+import { isAdmin } from "../App.vue";
 </script>
 
 <style scoped>

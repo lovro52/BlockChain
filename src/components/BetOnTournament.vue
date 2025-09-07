@@ -34,7 +34,6 @@ const placeBet = async () => {
     const contract = await getContract();
     const signer = await contract.signer.getAddress();
 
-    // Provjeri postojeći bet
     const bet = await contract.bets(tournamentId.value, signer);
     if (bet.amount > 0) {
       status.value = "Već si se kladio na ovaj turnir.";

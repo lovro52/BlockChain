@@ -3,7 +3,7 @@ import ViewTournaments from "../components/ViewTournaments.vue";
 import BetOnTournament from "../components/BetOnTournament.vue";
 import AdminDashboard from "../components/AdminDashboard.vue";
 import Home from "../components/Home.vue";
-import { isAdmin } from "../App.vue"; // sada će raditi
+import { isAdmin } from "../App.vue";
 
 const routes = [
   { path: "/", component: Home },

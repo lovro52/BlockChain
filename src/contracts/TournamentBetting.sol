@@ -97,7 +97,7 @@ contract TournamentBetting {
         emit RewardClaimed(_tournamentId, msg.sender, reward);
     }
 
-    // 👇 Nova funkcija za čitanje uloga
+    
     function getUserBet(uint _tournamentId, address _user)
         public
         view
