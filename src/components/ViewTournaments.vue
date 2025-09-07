@@ -2,10 +2,25 @@
   <div class="container">
     <h2 class="title">Turniri</h2>
 
+    <!-- FILTER SECTION -->
+    <div class="filter-group">
+      <input
+        type="text"
+        v-model="filterText"
+        class="filter-input"
+        placeholder="Filtriraj po imenu turnira ili natjecatelja"
+      />
+
+      <label class="filter-checkbox">
+        <input type="checkbox" v-model="onlyOpen" />
+        Otvoreni/Zatvoreni
+      </label>
+    </div>
+
     <div v-if="isLoading" class="loading">Učitavanje turnira...</div>
 
     <div v-else class="tournament-grid">
-      <div v-for="t in tournaments" :key="t.id" class="card">
+      <div v-for="t in filteredTournaments" :key="t.id" class="card">
         <h3 class="card-title">🏆 #{{ t.id }} — {{ t.name }}</h3>
         <p class="status">
           <strong>Status:</strong>
@@ -46,7 +61,9 @@
             <button class="claim-btn" @click="claimReward(t.id)">
               🎉 Preuzmi nagradu
             </button>
-            <p v-if="status[t.id]" class="status-message">{{ status[t.id] }}</p>
+            <p v-if="status[t.id]" class="status-message">
+              {{ status[t.id] }}
+            </p>
           </div>
 
           <div v-else-if="userBets[t.id]" class="wrong">
@@ -71,7 +88,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { getContract } from "../contracts/contract";
 import { ethers } from "ethers";
 
@@ -86,6 +103,9 @@ const modalAmount = ref("");
 const selectedTournament = ref(null);
 const selectedCompetitor = ref(null);
 
+const filterText = ref("");
+const onlyOpen = ref(false);
+
 const openModal = (tid, cid) => {
   selectedTournament.value = tid;
   selectedCompetitor.value = cid;
@@ -96,11 +116,6 @@ const openModal = (tid, cid) => {
 const confirmBet = async () => {
   const amount = modalAmount.value;
   modalOpen.value = false;
-
-  if (!amount || isNaN(amount)) {
-    alert("Neispravan iznos.");
-    return;
-  }
 
   if (!amount || isNaN(amount) || Number(amount) <= 0) {
     alert("Neispravan iznos.");
@@ -181,6 +196,18 @@ const claimReward = async (id) => {
     alert("Greška: " + msg);
   }
 };
+
+const filteredTournaments = computed(() => {
+  return tournaments.value.filter((t) => {
+    const textMatch =
+      t.name.toLowerCase().includes(filterText.value.toLowerCase()) ||
+      t.competitors.some((c) =>
+        c.toLowerCase().includes(filterText.value.toLowerCase())
+      );
+    const statusMatch = onlyOpen.value ? t.isOpen : true;
+    return textMatch && statusMatch;
+  });
+});
 </script>
 
 <style scoped>
@@ -199,6 +226,37 @@ const claimReward = async (id) => {
 .loading {
   text-align: center;
   color: gray;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid #00bcd4;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 2rem;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  background: #1e1e1e;
+}
+.filter-input {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  background: #333;
+  border: none;
+  border-radius: 8px;
+  color: white;
+}
+.filter-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: white;
+  font-size: 1rem;
+  user-select: none;
 }
 
 .tournament-grid {
